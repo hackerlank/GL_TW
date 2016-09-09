@@ -1,0 +1,4 @@
+﻿Ver:1
+android|oDw9KM26tmbs1dffYpmSnoMUddc=|2
+ios|xTa2JGVPqbjD22X2Udj2pOF2SfA=|2
+win|i3z7ARtKKqZZJcTtdwKOUgRXW1Q=|3557

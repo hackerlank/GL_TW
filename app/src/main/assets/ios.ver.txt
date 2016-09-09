@@ -1,0 +1,3 @@
+﻿Ver:1|FileCount:2
+DependBundles/BM.data|GJ2lkAe1+7Jdjozl0t+uDkA46Tw=@303977
+Audio/301001.assetBundle|nnxIU0N14B4TubnJg06L4dmznTc=@3810

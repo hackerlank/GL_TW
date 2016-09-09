@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+      isDebug:isDebug
+      isTest:isTest
+	  isTencent:是否是腾讯的版本
+	  
+      isOpenHotUpdate:是否开启资源热更新
+      isOpenScriptsHotUpdate:是否开启lua脚本热更新（依赖isOpenHotUpdate）
+      
+      localHotUpdateURL:内网热更新地址
+      hotUpdateURL:外网热更新地址
+      
+      IP:外网
+      debugIp1:内网测试 
+      debugIp2:内网研发
+      
+      homeUrl:下载客户端地址
+-->
+<root>
+  <content 
+    isDebug="0"
+    isTest="0"
+    
+	isTencent="0"
+	
+    isOpenHotUpdate="1"
+    isOpenScriptsHotUpdate="1"
+        cdnURL="http://sgl.download.8888play.com/config/test_tw/"
+    localHotUpdateURL="http://192.168.185.10/GL_TW/" 
+    hotUpdateURL="http://download.xgl.ztgame.com.cn/testpatch/"   
+    debugIp1="222.73.243.113" 
+    debugPort1="1500"
+    
+    debugIp2="192.168.185.22" 
+    debugPort2="1510"  
+    
+    homeURL="http://sapi.ztgame.com/s/axp"
+  />
+  
+  <randomIP>
+	<login IP="222.73.243.114" port="1500"/>
+  </randomIP>
+  <recommendServer id="1"/>
+  <recommendServer id="2"/>
+  <recommendServer id="3"/>
+</root>
