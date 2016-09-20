@@ -25,8 +25,8 @@
 	
     isOpenHotUpdate="1"
     isOpenScriptsHotUpdate="1"
-        cdnURL="http://sgl.download.8888play.com/sgl/config/test_tw/"
-    localHotUpdateURL="http://192.168.185.10/GL_TW/" 
+    cdnURL="http://sgl.download.8888play.com/sgl/config/test_tw/"
+    localHotUpdateURL="http://192.168.185.10/GL_TW/"
     hotUpdateURL="http://download.xgl.ztgame.com.cn/testpatch/"   
     debugIp1="222.73.243.113" 
     debugPort1="1500"

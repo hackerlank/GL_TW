@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.1"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
 
     defaultConfig {
         applicationId "ztgame.com.gltw"
         minSdkVersion 17
-        targetSdkVersion 24
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
@@ -15,6 +15,9 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable false
+            jniDebuggable false
+            renderscriptDebuggable false
         }
     }
 
@@ -34,7 +37,7 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.1.1'
+    compile 'com.android.support:appcompat-v7:23.0.1'
     compile project(':SGL_BaplayNew_20160816')
     compile 'com.facebook.android:facebook-android-sdk:4.8.2'
     compile 'com.google.android.gms:play-services-plus:8.3.0'
@@ -42,4 +45,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-gcm:8.3.0'
     compile 'com.google.android.gms:play-services-games:8.3.0'
     compile files('libs/bugly_crash_release.jar')
+    compile files('libs/Msc.jar')
+    compile files('libs/voicechat_v2.0.jar')
+    compile 'com.github.hotchemi:permissionsdispatcher:2.1.3'
 }
