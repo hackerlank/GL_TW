@@ -5,11 +5,11 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "ztgame.com.gltw"
+        applicationId "com.baplay.sgl"
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.0.0"
     }
     buildTypes {
         release {
@@ -27,7 +27,7 @@ android {
             if (outputFile != null && outputFile.name.endsWith('.apk')) {
                 //这里修改apk文件名
                 //def fileName = "demo_${variant.productFlavors[0].name}-${defaultConfig.versionCode}-${defaultConfig.versionName}-${releaseTime() }.apk"
-                def fileName = "新古龍群俠傳.apk"
+                def fileName = "com.baplay.sgl.apk"
                 output.outputFile = new File(outputFile.parent, fileName)
             }
         }

@@ -58,7 +58,8 @@ public class MainActivity extends UnityPlayerNativeActivity  implements PayPageC
         //設定支付頁關閉監聽
         BaplayPlatform.getInstance().setPayPageCloseListener(MainActivity.this, MainActivity.this);
         BaplayPlatform.getInstance().baplaySetIdentification(this, ChannelType.Efun_Google);
-
+        BaplayLogUtil.enableDebug(true);
+        BaplayLogUtil.enableInfo(true);
         VoiceChatInterface.initWithGameId(this, 10018, 100, 0);
         VoiceChatInterface.setLongRecordTime(10);
         //login();
@@ -134,6 +135,62 @@ public class MainActivity extends UnityPlayerNativeActivity  implements PayPageC
             }
         });
     }
+
+    public void onStart()
+    {
+        super.onStart();
+        BaplayPlatform.getInstance().baplayOnStart(this);
+    }
+
+    public void onStop()
+    {
+        super.onStop();
+        BaplayPlatform.getInstance().baplayOnStop(this);
+    }
+
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        BaplayPlatform.getInstance().baplayOnDestroy(this);
+    }
+
+    public void onResume()
+    {
+        super.onResume();
+        BaplayPlatform.getInstance().baplayOnResume(this);
+    }
+
+    public void onPause()
+    {
+        super.onResume();
+        BaplayPlatform.getInstance().baplayOnPause(this);
+    }
+
+    public void ShowFloatView(final String info)
+    {
+        runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                Log.v("ShowFloatView", info);
+                String[] arr = info.split("|");
+                String serverCode = _zoneID;//服务器code
+                String roleId = arr[0]; //角色id
+                String level = arr[1];//角色等级;请在上传google的包传入实际角色等级，不上传google的包传入"";
+                String appName = "新古龍群俠傳";
+                String roleName = arr[2];//角色名稱
+                BaplayPlatform.getInstance().baplayCreateFloatView(MainActivity.this, _accid, serverCode, roleId, level, appName, roleName);
+            }
+        });
+    }
+
+    public void HideFloatView()
+    {
+        Log.v("HideFloatView", "_accid---------" + _accid);
+        BaplayPlatform.getInstance().hideFloatView(MainActivity.this);
+    }
+
     public void TDReg(String str)
     {
 
@@ -160,14 +217,16 @@ public class MainActivity extends UnityPlayerNativeActivity  implements PayPageC
 
     }
 
-    public void payMoney(String payStr) {
+    public void payMoney(String payStr)
+    {
+        String[] arr = payStr.split("|");
         String userid = _accid;// 登录成功得到的userid
-        String creditid = payStr;// 角色id
+        String creditid = arr[0];// 角色id
         String serverCode = _zoneID;// 服务器code
-        String roleLevel = "1";// 角色等级
+        String roleLevel = arr[1];// 角色等级
         String roleName = "";// 角色名
         String remark = "";// 自定义数据串（选填）
-        String roleId = payStr; // 角色id
+        String roleId = arr[0]; // 角色id
 
         BaplayPlatform.getInstance().baplayGooglePlay(MainActivity.this, userid, creditid, serverCode, roleName, roleLevel, remark, roleId);
     }
