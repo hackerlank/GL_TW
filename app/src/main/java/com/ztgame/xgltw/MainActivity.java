@@ -1,6 +1,7 @@
 package com.ztgame.xgltw;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import com.tommy.ios.map05.UnityPlayerNativeActivity;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -13,17 +14,18 @@ import com.youan.voicechat.contants.StatusCode;
 import com.iflytek.cloud.RecognizerListener;
 import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechError;
-
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.PermissionChecker;
 import android.util.Log;
 import java.util.ArrayList;
 import android.Manifest;
-import com.baplay.core.tools.BaplayLogUtil;
+import android.widget.Toast;
+
 import com.baplay.payPageClose.PayPageCloseListener;
 import com.baplay.platform.login.comm.bean.LoginParameters;
 import com.baplay.platform.login.comm.callback.OnBaplayLoginListener;
@@ -35,6 +37,7 @@ import com.unity3d.player.UnityPlayer;
 public class MainActivity extends UnityPlayerNativeActivity  implements PayPageCloseListener {
 
     private static final int CODE_FOR_RECORD_AUDIO = 0;
+    private static final int CODE_FOR_WRITE_EXTERNAL_STORAGE = 1;
     private String _accid;
     private String _zoneID;
 
@@ -44,24 +47,22 @@ public class MainActivity extends UnityPlayerNativeActivity  implements PayPageC
     private String textStr;
     private Boolean isChanging = false;
     private ArrayList<String> idList;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-        BaplayLogUtil.enableDebug(true);
-        BaplayLogUtil.enableInfo(true);
+        writeExternalIsPermission();
         BaplayPlatform.getInstance().init(this);
+        //BaplayLogUtil.enableDebug(true);
+        //BaplayLogUtil.enableInfo(true);
         CrashReport.initCrashReport(this, "900051837", true);
 
         //設定支付頁關閉監聽
         BaplayPlatform.getInstance().setPayPageCloseListener(MainActivity.this, MainActivity.this);
         BaplayPlatform.getInstance().baplaySetIdentification(this, ChannelType.Efun_Google);
-        BaplayLogUtil.enableDebug(true);
-        BaplayLogUtil.enableInfo(true);
+
         VoiceChatInterface.initWithGameId(this, 10018, 100, 0);
-        VoiceChatInterface.setLongRecordTime(10);
+        //login();
         //login();
     }
     public void checkActive()
@@ -100,9 +101,13 @@ public class MainActivity extends UnityPlayerNativeActivity  implements PayPageC
 //                        String roleName = "Tina";//角色名稱
 //                        BaplayPlatform.getInstance().baplayCreateFloatView(MainActivity.this, userid, serverCode, roleId, level, appName, roleName);
                         //pay();
-                        String str = "GL_TW"+"|57-"+userid+"|";
+                        //台湾渠道号8888 香港渠道号8889 国内57
+                        String str = "GL_TW"+"|8888-"+userid+"|";
                         UnityPlayer.UnitySendMessage("UI_LOGIN_FIRST(Clone)","GALogin",str);
                         UnityPlayer.UnitySendMessage("UI_LOGIN_FIRST(Clone)","ShowNormalButton","");
+                        String versionName = getVersion(MainActivity.this);
+                        Log.v("VERSION_NAME", "VERSION_NAME:" + versionName);
+                        UnityPlayer.UnitySendMessage("UI_LOGIN_FIRST(Clone)", "ShowVersion", versionName);
                     }
                     // 重写返回事件
                 } else if (BaplayLoginHelper.ReturnCode.LOGIN_BACK.equals(params.getCode())) {
@@ -136,6 +141,37 @@ public class MainActivity extends UnityPlayerNativeActivity  implements PayPageC
         });
     }
 
+    public String getVersion(Context context)//获取版本号
+    {
+        try
+        {
+            PackageInfo pi = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            return pi.versionName;
+        } catch (PackageManager.NameNotFoundException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return "1.0";
+        }
+    }
+
+    public void gotoFansPage()
+    {
+        BaplayPlatform.getInstance().gotoFunsPage(this);
+    }
+    public void gotoBahamutPage()
+    {
+        BaplayPlatform.getInstance().gotoBahamutPage(this);
+    }
+    public void gotoBaplayPage()
+    {
+        BaplayPlatform.getInstance().gotoBaplayPage(this);
+    }
+    public void gotoServicePage()
+    {
+        BaplayPlatform.getInstance().gotoServicePage(this);
+    }
+
     public void onStart()
     {
         super.onStart();
@@ -152,6 +188,7 @@ public class MainActivity extends UnityPlayerNativeActivity  implements PayPageC
     {
         super.onDestroy();
         BaplayPlatform.getInstance().baplayOnDestroy(this);
+
     }
 
     public void onResume()
@@ -236,7 +273,62 @@ public class MainActivity extends UnityPlayerNativeActivity  implements PayPageC
     public void payPageClose() {
         Log.v("baplay","payPageClose~~~~~~~~~~~~~~~~~~~~~");
     }
+    //存储功能
+    public boolean writeExternalIsPermission()
+    {
+        boolean isHasPermission = checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (isHasPermission == false)
+        {
+            ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE }, CODE_FOR_WRITE_EXTERNAL_STORAGE);
+            //showRationaleDialog("為了達到更好的用戶體驗,我們會進行緩存及檔存儲操作,需要您授予相關的存儲許可權!\n請您放心,該許可權為正常使用權限,不會涉及到您的隱私!\n稍後請點擊彈出框的允許按鈕。", Manifest.permission.WRITE_EXTERNAL_STORAGE, CODE_FOR_WRITE_EXTERNAL_STORAGE);
+        }
+        return isHasPermission;
+    }
 
+    /**
+     * 告知用户具体需要权限的原因
+     *
+     * @param messageResId
+     * @param request
+     */
+    private void showRationaleDialog(String messageResId, final String permission, final int code)
+    {
+        Log.v("writeExternalIsPermission", "messageResId----" + messageResId + " permission:" + permission);
+        new AlertDialog.Builder(this).setPositiveButton("确定", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(@NonNull DialogInterface dialog, int which)
+                    {
+                        ActivityCompat.requestPermissions(MainActivity.this, new String[] { permission }, code);//请求权限
+                    }
+                })
+                .setTitle("请求权限")
+                .setCancelable(false)
+                .setMessage(messageResId)
+                .show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode)
+        {
+            case CODE_FOR_WRITE_EXTERNAL_STORAGE:
+            {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
+                    //TODO:已授权
+                    Log.v("writeExternalIsPermission","已授权~~~~~~~~~~~~~~~~~~~~~" + requestCode + " appname:" + this.getPackageName());
+                } else
+                {
+                    //TODO:用户拒绝
+                    writeExternalIsPermission();
+                    //Toast.makeText(this, "為了達到更好的用戶體驗,我們會進行緩存及檔存儲操作,需要您授予相關的存儲許可權!", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
 
     //语音-------------------
     private boolean checkPermission(String permission)
