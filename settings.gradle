@@ -1,1 +1,1 @@
-include ':app', ':SGL_BaplayNew_20160816'
+include ':app', ':SGL_BaplayNew_20160816', ':SGL_HK_BaplayNew_20160816'

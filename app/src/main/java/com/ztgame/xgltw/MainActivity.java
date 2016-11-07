@@ -3,6 +3,8 @@ package com.ztgame.xgltw;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+
+import com.baplay.core.tools.BaplayLogUtil;
 import com.tommy.ios.map05.UnityPlayerNativeActivity;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.youan.voicechat.vcinterface.VoiceChatInterface;
@@ -53,8 +55,8 @@ public class MainActivity extends UnityPlayerNativeActivity  implements PayPageC
 
         writeExternalIsPermission();
         BaplayPlatform.getInstance().init(this);
-        //BaplayLogUtil.enableDebug(true);
-        //BaplayLogUtil.enableInfo(true);
+        BaplayLogUtil.enableDebug(true);
+        BaplayLogUtil.enableInfo(true);
         CrashReport.initCrashReport(this, "900051837", true);
 
         //設定支付頁關閉監聽
@@ -210,13 +212,13 @@ public class MainActivity extends UnityPlayerNativeActivity  implements PayPageC
             @Override
             public void run()
             {
-                Log.v("ShowFloatView", info);
-                String[] arr = info.split("|");
+                String[] arr = info.split("\\|");
                 String serverCode = _zoneID;//服务器code
                 String roleId = arr[0]; //角色id
                 String level = arr[1];//角色等级;请在上传google的包传入实际角色等级，不上传google的包传入"";
                 String appName = "新古龍群俠傳";
                 String roleName = arr[2];//角色名稱
+                //Log.v("ShowFloatView", "info:"+info+" roleId:"+roleId+" level:"+level+" roleName:"+roleName);
                 BaplayPlatform.getInstance().baplayCreateFloatView(MainActivity.this, _accid, serverCode, roleId, level, appName, roleName);
             }
         });
@@ -224,7 +226,7 @@ public class MainActivity extends UnityPlayerNativeActivity  implements PayPageC
 
     public void HideFloatView()
     {
-        Log.v("HideFloatView", "_accid---------" + _accid);
+        //Log.v("HideFloatView", "_accid---------" + _accid);
         BaplayPlatform.getInstance().hideFloatView(MainActivity.this);
     }
 
@@ -256,7 +258,7 @@ public class MainActivity extends UnityPlayerNativeActivity  implements PayPageC
 
     public void payMoney(String payStr)
     {
-        String[] arr = payStr.split("|");
+        String[] arr = payStr.split("\\|");
         String userid = _accid;// 登录成功得到的userid
         String creditid = arr[0];// 角色id
         String serverCode = _zoneID;// 服务器code
@@ -264,7 +266,7 @@ public class MainActivity extends UnityPlayerNativeActivity  implements PayPageC
         String roleName = "";// 角色名
         String remark = "";// 自定义数据串（选填）
         String roleId = arr[0]; // 角色id
-
+        //Log.v("payMoney","payStr:"+payStr+" creditid："+creditid+" roleId:"+roleId+" roleLevel:"+roleLevel+" userid:"+userid+" serverCode:"+serverCode);
         BaplayPlatform.getInstance().baplayGooglePlay(MainActivity.this, userid, creditid, serverCode, roleName, roleLevel, remark, roleId);
     }
 
@@ -580,7 +582,7 @@ public class MainActivity extends UnityPlayerNativeActivity  implements PayPageC
         isChanging = true;
 
         String str = idList.get(0);
-        String[] arr = str.split("|");
+        String[] arr = str.split("\\|");
         voiceID =  Long.parseLong(arr[0]);
         isSendAll = arr[1];
 
